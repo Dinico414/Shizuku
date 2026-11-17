@@ -101,8 +101,8 @@ private fun Context.enableAccessibilityService(): Boolean {
             enabledServices.joinToString(":") + ":$accessibilityServiceName"
         }
 
-    Settings.Secure.putString(
-        contentResolver,
+    SettingsHelper.putSecureString(
+        this,
         Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
         newServices,
     )

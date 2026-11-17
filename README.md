@@ -22,7 +22,7 @@ An Android app that allows other apps to use system-level APIs that require ADB/
 
 ## ⚠️ Disclaimer
 
-This is a **FORK** of Shizuku. If you are looking for the original version, please visit the [RikkaApps/Shizuku](https://github.com/RikkaApps/Shizuku) repository.
+This is a **FORK** of the [thedjchi/Shizuku](https://github.com/thedjchi/Shizuku) Fork of Shizuku. If you are looking for the original version, please visit the [RikkaApps/Shizuku](https://github.com/RikkaApps/Shizuku) repository.
 
 ## ⬇️ Download
 

@@ -17,6 +17,7 @@ import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.adb.AdbClient
 import moe.shizuku.manager.adb.AdbKey
 import moe.shizuku.manager.adb.PreferenceAdbKeyStore
+import moe.shizuku.manager.utils.SettingsHelper
 import moe.shizuku.manager.starter.Starter
 import moe.shizuku.manager.utils.EnvironmentUtils
 import moe.shizuku.manager.utils.ShizukuStateMachine
@@ -66,21 +67,14 @@ object AdbStarter {
                 }
             }
         } finally {
-            if (context.checkSelfPermission(WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED)
-                Settings.Global.putInt(context.contentResolver, "adb_wifi_enabled", 0)
+            SettingsHelper.putGlobalInt(context, "adb_wifi_enabled", 0)
         }
     }
 
     suspend fun stopTcp(context: Context, port: Int) {
         runCatching {
-            val cr = context.contentResolver
-            if (context.checkSelfPermission(WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED) {
-                Settings.Global.putInt(cr, Settings.Global.ADB_ENABLED, 1)
-                Settings.Global.putLong(cr, "adb_allowed_connection_time", 0L)
-            }
-        
-            val adbEnabled = Settings.Global.getInt(cr, Settings.Global.ADB_ENABLED, 0)
-            if (adbEnabled == 0) throw IllegalStateException("ADB is not enabled")
+            if (SettingsHelper.ensureAdbEnabled(context) == SettingsHelper.AdbEnabledState.DISABLED)
+                throw IllegalStateException("ADB is not enabled")
 
             ShizukuStateMachine.set(ShizukuStateMachine.State.STOPPING)
             val key = AdbKey(PreferenceAdbKeyStore(ShizukuSettings.getPreferences()), "shizuku")
